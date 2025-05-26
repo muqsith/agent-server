@@ -12,7 +12,14 @@ $ source .venv/bin/activate
 # to deactivate
 $ deactivate
 
+# deps
+$ pip install fastapi uvicorn
 
 
 
+# run the server (watch mode)
+$ uvicorn main:app --reload
+
+# or (normal mode)
+$ python server.py
 
