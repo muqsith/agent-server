@@ -1,6 +1,8 @@
 from fastapi import FastAPI, Request
-from fastapi.responses import JSONResponse, FileResponse
+from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
+
+from homework import handle_homework_query
 
 app = FastAPI()
 
@@ -19,11 +21,12 @@ def hello():
     return JSONResponse({"message": "Hello from API"})
 
 # API Endpoint: Chat
-@app.post("/api/chat")
+@app.post("/api/chat/homework")
 async def chat(request: Request):
     data = await request.json()
     message = data.get("message", "")
-    return JSONResponse({"message": message})
+    airesponse = await handle_homework_query(message)
+    return JSONResponse({"message": airesponse})
 
 
 if __name__ == "__main__":
