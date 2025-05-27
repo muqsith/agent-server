@@ -9,12 +9,19 @@ from deepwiki import (
     setup_deepwiki,
     cleanup_deepwiki,
 )
+from weather import (
+    handle_weather_query,
+    setup_weather,
+    cleanup_weather,
+)
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     await setup_deepwiki()
+    await setup_weather()
     yield
     await cleanup_deepwiki()
+    await cleanup_weather()
 
 app = FastAPI(lifespan=lifespan)
 
@@ -46,6 +53,13 @@ async def chat(request: Request):
     data = await request.json()
     message = data.get("message", "")
     airesponse = await handle_deepwiki_query(message)
+    return JSONResponse({"message": airesponse})
+
+@app.post("/api/chat/weather")
+async def chat(request: Request):
+    data = await request.json()
+    message = data.get("message", "")
+    airesponse = await handle_weather_query(message)
     return JSONResponse({"message": airesponse})
 
 
