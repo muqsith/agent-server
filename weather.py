@@ -30,7 +30,7 @@ async def setup_weather():
     global deepwiki_agent, mcp_server
     mcp_server = await MCPServerSse(
         name="Weather",
-        params={"url": "http://localhost:8000/sse"}
+        params={"url": "http://localhost:8053/sse"}
     ).__aenter__()
 
     deepwiki_agent = Agent(
