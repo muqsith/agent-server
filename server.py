@@ -1,10 +1,22 @@
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
+from contextlib import asynccontextmanager
 
 from homework import handle_homework_query
+from deepwiki import (
+    handle_deepwiki_query,
+    setup_deepwiki,
+    cleanup_deepwiki,
+)
 
-app = FastAPI()
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    await setup_deepwiki()
+    yield
+    await cleanup_deepwiki()
+
+app = FastAPI(lifespan=lifespan)
 
 # Enable CORS for all origins
 app.add_middleware(
@@ -14,6 +26,7 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
 
 # API Endpoint: Hello
 @app.get("/api/ping")
@@ -26,6 +39,13 @@ async def chat(request: Request):
     data = await request.json()
     message = data.get("message", "")
     airesponse = await handle_homework_query(message)
+    return JSONResponse({"message": airesponse})
+
+@app.post("/api/chat/deepwiki")
+async def chat(request: Request):
+    data = await request.json()
+    message = data.get("message", "")
+    airesponse = await handle_deepwiki_query(message)
     return JSONResponse({"message": airesponse})
 
 

@@ -13,7 +13,7 @@ $ source .venv/bin/activate
 $ deactivate
 
 # deps
-$ pip install fastapi uvicorn openai-agents
+$ pip install fastapi uvicorn openai-agents openai-agents-mcp
 
 
 
@@ -23,3 +23,6 @@ $ uvicorn main:app --reload
 # or (normal mode)
 $ python server.py
 
+
+# inspector tool
+npx @modelcontextprotocol/inspector
